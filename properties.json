@@ -1,0 +1,300 @@
+[
+    {
+      "titulo": "CASA EN VENTA EN METEPEC",
+      "precio_mxn": 4850000,
+      "recamaras": 3,
+      "banos": 2,
+      "superficie_m2": 182,
+      "ubicacion": "Metepec"
+    },
+    {
+      "titulo": "CASA EN VENTA EN METEPEC, DETRÁS DE COLEGIO BUENA TIERRA",
+      "precio_mxn": 4500000,
+      "recamaras": 3,
+      "banos": 3,
+      "superficie_m2": 2,
+      "ubicacion": "Metepec, detrás de Colegio Buena Tierra"
+    },
+    {
+      "titulo": "CASA EN VENTA CON LOCAL COMERCIAL ZONA ESMERALDA, SAN MATEO ATENCO",
+      "precio_mxn": 4699864,
+      "recamaras": 3,
+      "banos": 2,
+      "superficie_m2": 220,
+      "ubicacion": "San Mateo Atenco, zona Esmeralda"
+    },
+    {
+      "titulo": "RESIDENCIA EN VENTA EN METEPEC, CLUB DE GOLF SAN CARLOS",
+      "precio_mxn": 55000000,
+      "recamaras": 3,
+      "banos": 3.5,
+      "superficie_m2": 633,
+      "ubicacion": "Metepec, Club de Golf San Carlos"
+    },
+    {
+      "titulo": "CASA EN VENTA EN SAN MATEO ATENCO, RESIDENCIAL ESMERALDA 5",
+      "precio_mxn": 3400000,
+      "recamaras": 3,
+      "banos": 2.5,
+      "superficie_m2": 126.96,
+      "ubicacion": "San Mateo Atenco, Residencial Esmeralda 5"
+    },
+    {
+      "titulo": "CASA NUEVA EN VENTA EN SAN MATEO ATENCO, MARSELLA RESIDENCIAL",
+      "precio_mxn": 5250000,
+      "recamaras": 3,
+      "banos": 2,
+      "superficie_m2": 209.86,
+      "ubicacion": "San Mateo Atenco, Marsella Residencial"
+    },
+    {
+      "titulo": "CASA EN VENTA METEPEC, SAN CARLOS",
+      "precio_mxn": 23000000,
+      "recamaras": 4,
+      "banos": 5,
+      "superficie_m2": 600,
+      "ubicacion": "Metepec, San Carlos"
+    },
+    {
+      "titulo": "CASA BOSQUES DE METEPEC, CERCA DE LAS MEJORES COLEGIOS",
+      "precio_mxn": 6950000,
+      "recamaras": 3,
+      "banos": 3,
+      "superficie_m2": 375,
+      "ubicacion": "Bosques de Metepec"
+    },
+    {
+      "titulo": "CASA EN VENTA EN METEPEC, CYGNUS",
+      "precio_mxn": 4100000,
+      "recamaras": 3,
+      "banos": 2.5,
+      "superficie_m2": 190,
+      "ubicacion": "Metepec, Cygnus"
+    },
+    {
+      "titulo": "DEPARTAMENTO EN VENTA EN SAN MATEO ATENCO, RESIDENCIAL FÉNIX",
+      "precio_mxn": 4782981,
+      "recamaras": 3,
+      "banos": 2,
+      "superficie_m2": 147.24,
+      "ubicacion": "San Mateo Atenco, Residencial Fénix"
+    },
+    {
+      "titulo": "DEPARTAMENTO EN VENTA METEPEC MIRANTA RESIDENCIAL",
+      "precio_mxn": 5950000,
+      "recamaras": 3,
+      "banos": 4.5,
+      "superficie_m2": 180,
+      "ubicacion": "Metepec, Miranta Residencial"
+    },
+    {
+      "titulo": "CASA EN VENTA METEPEC, COLONIA LAZARO CARDENAS",
+      "precio_mxn": 10650000,
+      "recamaras": 5,
+      "banos": 3,
+      "superficie_m2": 450,
+      "ubicacion": "Metepec, Colonia Lázaro Cárdenas"
+    },
+    {
+      "titulo": "CASA EN VENTA EN METEPEC, EN EL CLUB DE GOLF SAN CARLOS",
+      "precio_mxn": 14500000,
+      "recamaras": 3,
+      "banos": 4,
+      "superficie_m2": 401,
+      "ubicacion": "Metepec, Club de Golf San Carlos"
+    },
+    {
+      "titulo": "CASA EN VENTA, QUINTA SAN DIEGO",
+      "precio_mxn": 6750000,
+      "recamaras": 3,
+      "banos": 3.5,
+      "superficie_m2": 444,
+      "ubicacion": "Metepec, Quinta San Diego"
+    },
+    {
+      "titulo": "CASA EN VENTA EN METEPEC, SAN CARLOS 1A SECCIÓN.",
+      "precio_mxn": 12000000,
+      "recamaras": 3,
+      "banos": 3,
+      "superficie_m2": 420,
+      "ubicacion": "Metepec, San Carlos 1ª Sección"
+    },
+    {
+      "titulo": "CASA EN VENTA EN ZINACANTEPEC, TOLUCA, POR ZAMARRERO",
+      "precio_mxn": 2250000,
+      "recamaras": 6,
+      "banos": 2,
+      "superficie_m2": 260,
+      "ubicacion": "Zinacantepec, Toluca, por Zamarrero"
+    },
+    {
+      "titulo": "DEPARTAMENTO EN VENTA SAN MATEO ATENCO, ZONA ESMERALDA",
+      "precio_mxn": 1853000,
+      "recamaras": 2,
+      "banos": 1,
+      "superficie_m2": 64.64,
+      "ubicacion": "San Mateo Atenco, zona Esmeralda"
+    },
+    {
+      "titulo": "TERRENO EN VENTA EN METEPEC, LA ASUNCIÓN",
+      "precio_mxn": 6987500,
+      "superficie_m2_terreno": 559,
+      "ubicacion": "Metepec, La Asunción"
+    },
+    {
+      "titulo": "CASA EN VENTA EN METEPEC, CLUB DE GOLF SAN CARLOS, FRAC. SAN JORGE",
+      "precio_mxn": 8200000,
+      "recamaras": 3,
+      "banos": 3,
+      "superficie_m2": 320,
+      "ubicacion": "Metepec, Club de Golf San Carlos, Fracc. San Jorge"
+    },
+    {
+      "titulo": "CASA EN VENTA METEPEC, EN EL CLUB DE GOLF SAN CARLOS",
+      "precio_mxn": 11700000,
+      "recamaras": 3,
+      "banos": 3,
+      "superficie_m2": 300,
+      "ubicacion": "Metepec, Club de Golf San Carlos"
+    },
+    {
+      "titulo": "CASA EN VENTA COLONIA BELLAVISTA",
+      "precio_mxn": 3300000,
+      "recamaras": 3,
+      "banos": 3,
+      "superficie_m2": 155,
+      "ubicacion": "Colonia Bellavista, Metepec"
+    },
+    {
+      "titulo": "Residencia en Venta, Metepec, La Providencia, Estado de México",
+      "precio_mxn": 21000000,
+      "recamaras": 4,
+      "banos": 6,
+      "superficie_m2_terreno": 389,
+      "superficie_m2_construccion": 570,
+      "ubicacion": "Metepec, La Providencia"
+    },
+    {
+      "titulo": "CASA EN VENTA NUEVA METEPEC, EN RESIDENCIAL LAURELES, MODELO DAPHNE",
+      "precio_mxn": 6957211,
+      "recamaras": 3,
+      "banos": 3,
+      "superficie_m2": 216.52,
+      "ubicacion": "Metepec, Residencial Laureles, modelo Daphne"
+    },
+    {
+      "titulo": "CASA EN VENTA NUEVA METEPEC, EN RESIDENCIAL LAURELES, MODELO VANESA",
+      "precio_mxn": 8022477,
+      "recamaras": 3,
+      "banos": 3,
+      "superficie_m2": 232.86,
+      "ubicacion": "Metepec, Residencial Laureles, modelo Vanesa"
+    },
+    {
+      "titulo": "CASA EN VENTA SAN MATEO ATENCO RESIDENCIAL ESMERALDA (MODELO LUA)",
+      "precio_mxn": 3146139,
+      "recamaras": 3,
+      "banos": 2.5,
+      "superficie_m2": 115.2,
+      "ubicacion": "San Mateo Atenco, Residencial Esmeralda (modelo Lua)"
+    },
+    {
+      "titulo": "CASA EN VENTA EN METEPEC, SAN CARLOS, PASEO SAN JORGE",
+      "precio_mxn": 8450000,
+      "recamaras": 3,
+      "banos": 4.5,
+      "superficie_m2": 350,
+      "ubicacion": "Metepec, San Carlos, Paseo San Jorge"
+    },
+    {
+      "titulo": "CASA EN VENTA EN SAN MATEO ATENCO, RESIDENCIAL ESMERALDA, ALANA",
+      "precio_mxn": 3394569,
+      "recamaras": 3,
+      "banos": 2.5,
+      "superficie_m2": 124,
+      "ubicacion": "San Mateo Atenco, Residencial Esmeralda, Alana"
+    },
+    {
+      "titulo": "CASA EN VENTA EN SAN MATEO ATENCO, RESIDENCIAL GARZA AZUL IV",
+      "precio_mxn": 3400000,
+      "recamaras": 3,
+      "banos": 3,
+      "superficie_m2": 119,
+      "ubicacion": "San Mateo Atenco, Residencial Garza Azul IV"
+    },
+    {
+      "titulo": "TERRENO EN VENTA, SAN MATEO ATENCO",
+      "precio_mxn": 13350000,
+      "superficie_m2_terreno": 4450,
+      "ubicacion": "San Mateo Atenco"
+    },
+    {
+      "titulo": "TERRENO EN VENTA EN METEPEC, SOBRE AVENIDA ESTADO DE MÉXICO",
+      "precio_unidad": 5000,
+      "unidad": "MXN por m2",
+      "superficie_m2_terreno": 7031,
+      "ubicacion": "Metepec, sobre Avenida Estado de México"
+    },
+    {
+      "titulo": "CASA EN VENTA EN METEPEC, RESIDENCIAL PROVIDENCIA",
+      "precio_mxn": 21099000,
+      "recamaras": 4,
+      "banos": 4,
+      "superficie_m2": 582,
+      "ubicacion": "Metepec, Residencial Providencia"
+    },
+    {
+      "titulo": "TERRENO EN VENTA EN METEPEC",
+      "precio_unidad": 12000,
+      "unidad": "MXN por m2",
+      "superficie_m2_terreno": 200,
+      "ubicacion": "Metepec"
+    },
+    {
+      "titulo": "CASA EN VENTA EN METEPEC, A 5 MIN. DE SOLIDARIDAD LAS TORRES Y TECNOLÓGICO",
+      "precio_mxn": 6500000,
+      "recamaras": 3,
+      "banos": 4,
+      "superficie_m2": 342,
+      "ubicacion": "Metepec, a 5 min. de Solidaridad Las Torres y Tecnológico"
+    },
+    {
+      "titulo": "CASA EN VENTA EN METEPEC, FRACCIONAMIENTO CITLALLI I",
+      "precio_mxn": 4800000,
+      "recamaras": 4,
+      "banos": 3,
+      "superficie_m2": 300,
+      "ubicacion": "Metepec, Fraccionamiento Citlalli I"
+    },
+    {
+      "titulo": "CASA EN VENTA SAN MATEO ATENCO, RESIDENCIAL MARSELLA",
+      "precio_mxn": 5000000,
+      "recamaras": 4,
+      "banos": 3,
+      "superficie_m2": 136,
+      "ubicacion": "San Mateo Atenco, Residencial Marsella"
+    },
+    {
+      "titulo": "TERRENO EN VENTA EN METEPEC, SOBRE VIALIDAD IMPORTANTE",
+      "precio_mxn": 17700000,
+      "superficie_m2_terreno": 2360,
+      "ubicacion": "Metepec, sobre vialidad importante"
+    },
+    {
+      "titulo": "VENTA DE CASA EN SAN MATEO ATENCO, FRACCIONAMIENTO REAL SAN MIGUEL",
+      "precio_mxn": 4380000,
+      "recamaras": 3,
+      "banos": 2,
+      "superficie_m2": 250,
+      "ubicacion": "San Mateo Atenco, Fracc. Real San Miguel"
+    },
+    {
+      "titulo": "CASA EN VENTA SAN MATEO ATENCO RESIDENCIAL ESMERALDA- PRATA",
+      "precio_mxn": 2992140,
+      "recamaras": 3,
+      "banos": 2.5,
+      "superficie_m2": 103,
+      "ubicacion": "San Mateo Atenco, Residencial Esmeralda-Prata"
+    }
+  ]
+  
