@@ -3,7 +3,7 @@ export function About() {
     <section className="bg-white text-black py-24 md:py-32">
       <div className="container mx-auto px-6 grid md:grid-cols-2 gap-10 items-center">
         <div>
-          <h2 className="text-3xl md:text-5xl font-serif" style={{ color: '#30c1a8' }}>Sobre Novaland</h2>
+          <h2 className="text-3xl md:text-5xl font-serif" style={{ color: '#FFD700' }}>Sobre Novaland</h2>
           <p className="mt-6 text-lg text-neutral-800/90 leading-relaxed">
             En Novaland, seleccionamos residencias que redefinen el lujo: privacidad absoluta, diseño atemporal y una experiencia de vida sin compromisos. Creamos puentes discretos entre nuestros clientes y propiedades que destacan por su singularidad.
           </p>

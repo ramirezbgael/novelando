@@ -42,7 +42,7 @@ function HouseBuild3D() {
         animate={{ scaleY: 1, opacity: 1 }}
         transition={{ duration: 1.0, ease: 'easeOut', delay: 2.2 }}
         className="absolute left-1/2 -translate-x-1/2 bottom-[124px] w-64 h-0 border-l-[64px] border-r-[64px] border-b-[40px] border-l-transparent border-r-transparent"
-        style={{ borderBottomColor: 'rgb(0,167,167)' }}
+        style={{ borderBottomColor: '#FFD700' }}
       />
       {/* Sparkles */}
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: [0, 1, 0] }} transition={{ duration: 1.6, repeat: Infinity, repeatDelay: 0.6 }} className="absolute -top-1 left-16 h-1 w-1 rounded-full bg-[--color-gold]" />
