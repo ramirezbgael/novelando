@@ -1,44 +1,31 @@
-// Netlify Function proxy for EasyBroker API
-// Receives requests to /eb/* and forwards to https://api.easybroker.com/*
-// injecting the X-Authorization header from env var VITE_EASYBROKER_API_KEY
-
-export const config = {
-  path: '/eb/*',
-}
-
-export default async (request: Request): Promise<Response> => {
+// Netlify Function (Node) proxy for EasyBroker API
+// Route configured in netlify.toml: /eb/* -> /.netlify/functions/eb/:splat
+export async function handler(event: any) {
   const apiKey = process.env.VITE_EASYBROKER_API_KEY
   if (!apiKey) {
-    return new Response('Missing API key', { status: 500 })
+    return { statusCode: 500, body: 'Missing API key' }
   }
 
-  const url = new URL(request.url)
-  // Strip "/eb" prefix
-  const upstreamPath = url.pathname.replace(/^\/eb/, '')
-  const upstreamUrl = new URL(`https://api.easybroker.com${upstreamPath}${url.search}`)
+  const { path, rawQuery } = event
+  // path is like "/.netlify/functions/eb/v1/properties" – strip the function prefix
+  const upstreamPath = String(path).replace(/^\/.netlify\/functions\/eb/, '')
+  const upstreamUrl = `https://api.easybroker.com${upstreamPath}${rawQuery ? `?${rawQuery}` : ''}`
 
-  const init: RequestInit = {
-    method: request.method,
-    headers: new Headers({
+  const res = await fetch(upstreamUrl, {
+    method: event.httpMethod,
+    headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
       'X-Authorization': apiKey,
-    }),
-  }
-
-  if (request.method !== 'GET' && request.method !== 'HEAD') {
-    init.body = await request.text()
-  }
-
-  const res = await fetch(upstreamUrl, init)
-  const body = await res.text()
-  return new Response(body, {
-    status: res.status,
-    headers: {
-      'Content-Type': res.headers.get('Content-Type') || 'application/json',
-      'Cache-Control': 'no-store',
     },
+    body: ['GET', 'HEAD'].includes(event.httpMethod) ? undefined : event.body,
   })
+  const text = await res.text()
+  return {
+    statusCode: res.status,
+    headers: { 'Content-Type': res.headers.get('content-type') || 'application/json' },
+    body: text,
+  }
 }
 
 
