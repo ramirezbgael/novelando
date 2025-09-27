@@ -27,6 +27,7 @@ Crea un `.env` en la raíz:
 ```bash
 VITE_WHATSAPP=5215555555555     # Teléfono con código país, solo dígitos
 VITE_CALENDLY=https://calendly.com/tuusuario/tu-evento  # opcional
+VITE_EASYBROKER_API_KEY=sk_xxx  # solo en local; en producción usar variable de entorno del proveedor
 ```
 
 ## Estructura relevante
@@ -89,7 +90,7 @@ Colores y gradientes en `src/index.css`:
 
 ## Deploy
 El proyecto es SPA con React Router. Asegura fallback a `index.html` en producción:
-- Netlify: `redirects` a `/*  /index.html  200`
+- Netlify: `redirects` a `/*  /index.html  200`. Define `VITE_EASYBROKER_API_KEY` como variable de entorno en Netlify y usa el proxy `/eb` (configurado en `vite.config.ts`). Nunca embebas el API key en el código.
 - Vercel: usar configuración de SPA/fallback
 - NGINX/Apache: configurar rewrite a `index.html`
 

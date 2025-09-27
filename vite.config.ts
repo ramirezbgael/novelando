@@ -10,6 +10,12 @@ export default defineConfig({
         target: 'https://api.easybroker.com',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/eb/, ''),
+        configure: (proxy) => {
+          proxy.on('proxyReq', (proxyReq) => {
+            const key = process.env.VITE_EASYBROKER_API_KEY
+            if (key) proxyReq.setHeader('X-Authorization', key)
+          })
+        },
       },
     },
   },

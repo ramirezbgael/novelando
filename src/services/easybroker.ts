@@ -64,7 +64,9 @@ function normalizeProperty(raw: any): EBProperty | null {
   }
 }
 
-export const hasEasyBrokerKey = Boolean(import.meta.env.VITE_EASYBROKER_API_KEY)
+// Requests are proxied via Vite dev server (local) and Netlify Function (prod),
+// so the API key is NEVER embedded in the client bundle.
+export const hasEasyBrokerKey = true
 
 export type EBListPage = {
   items: EBProperty[]
@@ -86,21 +88,14 @@ function parseNextPage(nextUrl?: string | null): number | null {
 }
 
 export async function listEBProperties({ page = 1, limit = 50 } = {}): Promise<EBProperty[]> {
-  const apiKey = import.meta.env.VITE_EASYBROKER_API_KEY as string | undefined
-  if (!apiKey) {
-    return []
-  }
-
-  // Use vite dev proxy to avoid CORS in development
-  const base = typeof window !== 'undefined' && window.location?.origin?.includes('localhost') ? '/eb' : 'https://api.easybroker.com'
+  // Always hit our proxy: Vite dev proxy (local) or Netlify Function (prod)
+  const base = '/eb'
   const url = `${base}/v1/properties?page=${page}&limit=${limit}`
   try {
     const res = await fetch(url, {
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
-        // When going through the proxy, vite injects the header; keep this for production builds
-        'X-Authorization': apiKey,
       },
     })
     if (!res.ok) {
@@ -118,17 +113,12 @@ export async function listEBProperties({ page = 1, limit = 50 } = {}): Promise<E
 }
 
 export async function listEBPropertiesPaged({ page = 1, limit = 50 } = {}): Promise<EBListPage> {
-  const apiKey = import.meta.env.VITE_EASYBROKER_API_KEY as string | undefined
-  if (!apiKey) {
-    return { items: [], page, limit, total: 0, nextPage: null }
-  }
-  const base = typeof window !== 'undefined' && window.location?.origin?.includes('localhost') ? '/eb' : 'https://api.easybroker.com'
+  const base = '/eb'
   const url = `${base}/v1/properties?page=${page}&limit=${limit}`
   const res = await fetch(url, {
     headers: {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      'X-Authorization': apiKey,
     },
   })
   if (!res.ok) throw new Error(`EasyBroker ${res.status}`)
@@ -143,15 +133,12 @@ export async function listEBPropertiesPaged({ page = 1, limit = 50 } = {}): Prom
 }
 
 export async function getEBProperty(publicId: string): Promise<EBPropertyDetail | null> {
-  const apiKey = import.meta.env.VITE_EASYBROKER_API_KEY as string | undefined
-  if (!apiKey) return null
-  const base = typeof window !== 'undefined' && window.location?.origin?.includes('localhost') ? '/eb' : 'https://api.easybroker.com'
+  const base = '/eb'
   const url = `${base}/v1/properties/${encodeURIComponent(publicId)}`
   const res = await fetch(url, {
     headers: {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      'X-Authorization': apiKey,
     },
   })
   if (!res.ok) return null
