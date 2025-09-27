@@ -1,7 +1,6 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { Link } from 'react-router-dom'
-import { PROPERTIES, type PropertyRecord } from '../data/properties'
+import { listEBProperties, type EBProperty } from '../services/easybroker'
 
 function HouseBuild3D() {
   return (
@@ -51,37 +50,54 @@ function HouseBuild3D() {
   )
 }
 
-function chooseBestMatch(bedrooms: number, bathrooms: number, sizeM2: number): PropertyRecord {
-  const weighted = (p: PropertyRecord) => {
-    const a = p.amenities
-    const db = (a.bedrooms ?? 0) - bedrooms
-    const dba = (a.bathrooms ?? 0) - bathrooms
-    const ds = ((a.sizeM2 ?? 0) - sizeM2) / 50 // normaliza escala
-    return Math.abs(db) * 2 + Math.abs(dba) * 1.5 + Math.abs(ds)
-  }
-  return [...PROPERTIES].sort((a, b) => weighted(a) - weighted(b))[0]
-}
-
 export function PropertyFinder() {
   const [bedrooms, setBedrooms] = useState<number>(3)
   const [bathrooms, setBathrooms] = useState<number>(3)
-  const [sizeM2, setSizeM2] = useState<number>(180)
+  const [price, setPrice] = useState<number>(8_000_000)
   const [loading, setLoading] = useState<boolean>(false)
-  const [resultId, setResultId] = useState<number | null>(null)
+  const [resultRemote, setResultRemote] = useState<EBProperty | null>(null)
+  const [remotePool, setRemotePool] = useState<EBProperty[] | null>(null)
+  const [error, setError] = useState<string | null>(null)
 
-  const result = useMemo(() => {
-    if (!resultId && resultId !== 0) return null
-    return PROPERTIES.find((p) => p.id === resultId) ?? null
-  }, [resultId])
+  // Reinicia el resultado cuando cambian los parámetros
+  useEffect(() => {
+    setResultRemote(null)
+  }, [bedrooms, bathrooms, price])
 
   const onGenerate = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
-    setResultId(null)
-    await new Promise((r) => setTimeout(r, 4000))
-    const property = chooseBestMatch(bedrooms, bathrooms, sizeM2)
-    setResultId(property.id)
-    setLoading(false)
+    setError(null)
+    try {
+      // Try fetching from EasyBroker when we have an API key
+      const list = remotePool ?? (await listEBProperties())
+      if (list && list.length) {
+        setRemotePool(list)
+        const ordered = [...list].sort((a, b) => {
+          const db = (a.bedrooms ?? 0) - bedrooms
+          const dba = (a.bathrooms ?? 0) - bathrooms
+          const da = Math.abs(db) * 2 + Math.abs(dba) * 1.5 + Math.abs((a.price - price) / 1_000_000)
+          const bb = (b.bedrooms ?? 0) - bedrooms
+          const bba = (b.bathrooms ?? 0) - bathrooms
+          const dbb = Math.abs(bb) * 2 + Math.abs(bba) * 1.5 + Math.abs((b.price - price) / 1_000_000)
+          return da - dbb
+        })
+        if (!ordered.length) {
+          setError('No encontramos propiedades en EasyBroker con esos parámetros.')
+        } else {
+          const currentIdx = ordered.findIndex((p) => p.id === resultRemote?.id)
+          const nextIdx = currentIdx >= 0 ? (currentIdx + 1) % ordered.length : 0
+          setResultRemote(ordered[nextIdx])
+        }
+      } else {
+        setError('No encontramos propiedades en EasyBroker.')
+      }
+    } catch (err: any) {
+      console.error('EasyBroker error:', err)
+      setError('No pudimos conectarnos a EasyBroker. Intenta más tarde.')
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -89,7 +105,7 @@ export function PropertyFinder() {
       <div className="container mx-auto px-6">
         <div className="mx-auto max-w-3xl text-center">
           <h2 className="text-3xl md:text-5xl font-serif nv-gold-text">Generador de casa ideal</h2>
-          <p className="mt-3 text-white/70">Indica recámaras, baños y tamaño. Te mostraremos la mejor opción.</p>
+          <p className="mt-3 text-white/70">Indica recámaras, baños y precio. Te mostraremos la mejor opción.</p>
         </div>
 
         <form onSubmit={onGenerate} className="mx-auto mt-10 grid max-w-3xl grid-cols-1 md:grid-cols-3 gap-4">
@@ -142,9 +158,18 @@ export function PropertyFinder() {
             </div>
           </div>
           <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-            <label className="text-sm text-white/70">Tamaño (m²)</label>
-            <input type="range" min={80} max={400} step={10} value={sizeM2} onChange={(e) => setSizeM2(parseInt(e.target.value))} className="mt-3 w-full" style={{ accentColor: 'var(--color-gold)' }} />
-            <div className="mt-2 text-sm text-white/80">{sizeM2} m²</div>
+            <label className="text-sm text-white/70">Precio (MXN)</label>
+            <input
+              type="range"
+              min={3_000_000}
+              max={60_000_000}
+              step={500_000}
+              value={price}
+              onChange={(e) => setPrice(parseInt(e.target.value))}
+              className="mt-3 w-full"
+              style={{ accentColor: 'var(--color-gold)' }}
+            />
+            <div className="mt-2 text-sm text-white/80">{new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN', maximumFractionDigits: 0 }).format(price)}</div>
           </div>
           <div className="md:col-span-3 flex justify-center">
             <button type="submit" className="rounded-full px-6 py-3 nv-gradient-gold text-black font-medium tracking-wide hover:cursor-pointer" disabled={loading}>
@@ -163,26 +188,38 @@ export function PropertyFinder() {
                 </div>
               </motion.div>
             )}
-            {!loading && result && (
-              <motion.div key={result.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+            {!loading && error && (
+              <motion.div key="error" className="rounded-2xl border border-white/15 bg-white/5 px-4 py-3 text-sm text-white/80">
+                {error}
+              </motion.div>
+            )}
+            {!loading && resultRemote && (
+              <motion.div key={resultRemote.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
                 <div className="relative rounded-3xl overflow-hidden border border-white/10 bg-ink">
-                  <motion.img
-                    src={result.gallery[0]}
-                    alt={result.title}
-                    className="w-full h-[52svh] object-cover"
-                    initial={{ opacity: 0.2, scale: 1.02 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.5, ease: 'easeOut' }}
-                  />
+                  {resultRemote.photoUrl ? (
+                    <motion.img
+                      src={resultRemote.photoUrl || undefined}
+                      alt={resultRemote.title}
+                      className="w-full h-[52svh] object-cover"
+                      initial={{ opacity: 0.2, scale: 1.02 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ duration: 0.5, ease: 'easeOut' }}
+                    />
+                  ) : (
+                    <div className="w-full h-[52svh] flex items-center justify-center text-white/50">
+                      Sin imagen disponible
+                    </div>
+                  )}
                   <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-black/30" />
                 </div>
                 <div className="space-y-2">
-                  <div className="text-xl font-medium">{result.title}</div>
-                  <div className="text-white/80">{result.amenities.bedrooms} recámaras · {result.amenities.bathrooms} baños · {result.amenities.sizeM2} m²</div>
+                  <div className="text-xl font-medium">{resultRemote.title}</div>
+                  <div className="text-white/80">{resultRemote.bedrooms ?? '—'} recámaras · {resultRemote.bathrooms ?? '—'} baños</div>
+                  <div className="text-white/90 font-semibold">{new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN', maximumFractionDigits: 0 }).format(resultRemote.price || 0)}</div>
                   <div className="text-white/70 text-base mb-3">
-                    {result.description ? result.description : 'Aquí una breve descripción de la casa.'}
+                    {resultRemote.location}
                   </div>
-                  <Link to={`/property/${result.id}`} className="hover:cursor-pointer inline-flex items-center rounded-full border border-white/15 bg-white/5 px-5 py-3 text-sm backdrop-blur-sm hover:bg-white/10 transition">Ver propiedad</Link>
+                  <a href={resultRemote.url || '#'} target="_blank" rel="noopener noreferrer" className="hover:cursor-pointer inline-flex items-center rounded-full border border-white/15 bg-white/5 px-5 py-3 text-sm backdrop-blur-sm hover:bg-white/10 transition">Ver en EasyBroker</a>
                 </div>
               </motion.div>
             )}

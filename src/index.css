@@ -9,13 +9,13 @@
 @theme {
   --color-black: #0a0a0a;
   --color-white: #ffffff;
-  --color-gold: #FFD700; /* light forest green with a touch of blue */
-  --color-gold-600: #FFD700; /* deeper forest green */
+  --color-gold: #015426; /* light forest green with a touch of blue */
+  --color-gold-600: #015426; /* deeper forest green */
   --color-teal: #00a7a7;
   --color-carbon: #111315;
   --color-ink: #0f1216;
   --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
-  --font-serif: "Playfair Display", ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+  --font-serif: "Montserrat", ui-serif, Georgia, serif;
   --font-display: "Cinzel", "Playfair Display", ui-serif, Georgia, serif;
 }
 
@@ -28,7 +28,7 @@ body {
 }
 
 .nv-gradient-gold {
-  background: linear-gradient(135deg, #4d3800 0%, #b8860b 8%, #ffd65a 36%, #fff2b0 48%, #d8a900 60%, #a07400 78%, #ffea80 90%, #6b4e00 100%);
+  background: linear-gradient(90deg, #0a6f38 0%, #19aa5a 12%, #007937 40%, #02813b 50%, #02bd56 60%, #015426 80%, #03d562 100%);
   background-size: 200% 100%;
   background-position: 0% 50%;
   will-change: background-position, filter, color;
@@ -36,7 +36,7 @@ body {
 }
 
 .nv-gold-text {
-  background: linear-gradient(90deg, #4d3800 0%, #b8860b 12%, #ffd65a 40%, #fff2b0 50%, #d8a900 60%, #a07400 80%, #ffea80 100%);
+  background: linear-gradient(90deg, #0a6f38 0%, #19aa5a 12%, #007937 40%, #02813b 50%, #02bd56 60%, #015426 80%, #03d562 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -45,19 +45,24 @@ body {
 }
 
 .hero-text {
-  background: linear-gradient(90deg, #4d3800 0%, #b8860b 20%, #ffd65a 40%, #fff2b0 50%, #d8a900 60%, #a07400 80%, #ffea80 100%);
+  background: linear-gradient(90deg, #0a6f38 0%, #198531 1%, #19aa5a 12%, #1de075 40%, #02813b 50%, #02bd56 60%, #015426 80%, #03d562 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
   background-size: 200% 100%;
   background-position: 0% 50%;
-  animation: nv-gold-shimmer 6s ease-in-out infinite;
+  animation: nv-gold-shimmer 15s ease-in-out infinite;
+
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
   will-change: background-position;
+  /*text-shadow: 0 0 4px rgb(255, 255, 255);*/
+  filter: drop-shadow(0 0 60px rgba(56, 56, 56, 0.8));
 }
 
 .explore {
   margin-top: 30px;
-  background: linear-gradient(165deg, #4d3800 0%, #b8860b 20%, #ffd65a 40%, #fff2b0 50%, #d8a900 60%, #a07400 80%, #ffea80 100%);
+  background: linear-gradient(90deg, #012f16 0%, #016a30 12%, #007937 40%, #02813b 50%, #02bd56 60%, #015426 80%, #03d562 100%);
   color: #fefefe;
   border-radius: 25px;
   padding: 10px 20px;
@@ -69,8 +74,7 @@ body {
 
 
 .explore:hover {
-  background-color: #b59021;
-  color: #60522b;
+  color: #000000;
   cursor: pointer;
   
 }
@@ -83,13 +87,14 @@ body {
 
 
 .nv-gold-text-price {
-  background: linear-gradient(90deg, #b8860b 0%, #ffd65a 40%, #fff2b0 50%, #d8a900 60%, #a07400 80%, #ffea80 100%);
+  background: linear-gradient(90deg, #0a6f38 0%, #19aa5a 12%, #007937 40%, #02813b 50%, #02bd56 60%, #015426 80%, #03d562 100%);
+
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
   background-size: 200% 100%;
   background-position: 0% 50%;
-  animation: nv-gold-shimmer 6s ease-in-out infinite;
+  animation: nv-gold-shimmer 10s ease-in-out infinite;
   will-change: background-position;
 }
 

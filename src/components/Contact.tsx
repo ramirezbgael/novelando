@@ -15,7 +15,7 @@ export function Contact() {
           target="_blank"
           rel="noopener noreferrer"
           className="mt-10 inline-flex items-center gap-3 rounded-full px-7 py-4 nv-gradient-gold text-black font-medium tracking-wide leading-none"
-          style={{ boxShadow: '0 10px 40px rgba(200, 169, 106, 0.35)' }}
+          style={{ boxShadow: '0 0px 24px rgba(20, 222, 77, 0.5)' }}
         >
           <img src="/photos/whatsapp.png" alt="WhatsApp" className="h-6 w-6 -mt-0.5 object-contain" />
           Agenda por WhatsApp
