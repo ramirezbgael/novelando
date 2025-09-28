@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import { listEBProperties, type EBProperty } from '../services/easybroker'
 
@@ -195,7 +196,7 @@ export function PropertyFinder() {
             )}
             {!loading && resultRemote && (
               <motion.div key={resultRemote.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-                <div className="relative rounded-3xl overflow-hidden border border-white/10 bg-ink">
+                <Link to={`/property/${encodeURIComponent(resultRemote.id)}`} className="relative rounded-3xl overflow-hidden border border-white/10 bg-ink block">
                   {resultRemote.photoUrl ? (
                     <motion.img
                       src={resultRemote.photoUrl || undefined}
@@ -211,7 +212,7 @@ export function PropertyFinder() {
                     </div>
                   )}
                   <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-black/30" />
-                </div>
+                </Link>
                 <div className="space-y-2">
                   <div className="text-xl font-medium">{resultRemote.title}</div>
                   <div className="text-white/80">{resultRemote.bedrooms ?? '—'} recámaras · {resultRemote.bathrooms ?? '—'} baños</div>
@@ -219,7 +220,7 @@ export function PropertyFinder() {
                   <div className="text-white/70 text-base mb-3">
                     {resultRemote.location}
                   </div>
-                  <a href={resultRemote.url || '#'} target="_blank" rel="noopener noreferrer" className="hover:cursor-pointer inline-flex items-center rounded-full border border-white/15 bg-white/5 px-5 py-3 text-sm backdrop-blur-sm hover:bg-white/10 transition">Ver en EasyBroker</a>
+                  <Link to={`/property/${encodeURIComponent(resultRemote.id)}`} className="hover:cursor-pointer inline-flex items-center rounded-full border border-white/15 bg-white/5 px-5 py-3 text-sm backdrop-blur-sm hover:bg-white/10 transition">Ver detalle</Link>
                 </div>
               </motion.div>
             )}
