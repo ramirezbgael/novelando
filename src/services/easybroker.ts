@@ -68,6 +68,32 @@ function normalizeProperty(raw: any): EBProperty | null {
 // so the API key is NEVER embedded in the client bundle.
 export const hasEasyBrokerKey = true
 
+const EB_BASE = '/eb'
+
+async function ebFetch<T = any>(path: string, init?: RequestInit): Promise<T> {
+  const url = `${EB_BASE}${path}`
+  try {
+    console.log('[EB] →', url)
+    const res = await fetch(url, {
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      ...init,
+    })
+    const text = await res.text()
+    if (!res.ok) {
+      console.error('[EB] ←', res.status, text?.slice(0, 500))
+      throw new Error(`EasyBroker ${res.status}`)
+    }
+    console.debug('[EB] ←', res.status)
+    return text ? (JSON.parse(text) as T) : ({} as T)
+  } catch (err) {
+    console.error('[EB] fetch error', err)
+    throw err
+  }
+}
+
 export type EBListPage = {
   items: EBProperty[]
   page: number
@@ -89,21 +115,8 @@ function parseNextPage(nextUrl?: string | null): number | null {
 
 export async function listEBProperties({ page = 1, limit = 50 } = {}): Promise<EBProperty[]> {
   // Always hit our proxy: Vite dev proxy (local) or Netlify Function (prod)
-  const base = '/eb'
-  const url = `${base}/v1/properties?page=${page}&limit=${limit}`
   try {
-    const res = await fetch(url, {
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-      },
-    })
-    if (!res.ok) {
-      // 401 o 403 normalmente indican API key inválida; otras pueden ser CORS o límite
-      const text = await res.text().catch(() => '')
-      throw new Error(`EasyBroker ${res.status}: ${text || 'request failed'}`)
-    }
-    const data = (await res.json()) as EBListResponse
+    const data = await ebFetch<EBListResponse>(`/v1/properties?page=${page}&limit=${limit}`)
     const list = data.content ?? data.properties ?? []
     return list.map((item) => normalizeProperty(item)).filter(Boolean) as EBProperty[]
   } catch (err) {
@@ -113,16 +126,7 @@ export async function listEBProperties({ page = 1, limit = 50 } = {}): Promise<E
 }
 
 export async function listEBPropertiesPaged({ page = 1, limit = 50 } = {}): Promise<EBListPage> {
-  const base = '/eb'
-  const url = `${base}/v1/properties?page=${page}&limit=${limit}`
-  const res = await fetch(url, {
-    headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-    },
-  })
-  if (!res.ok) throw new Error(`EasyBroker ${res.status}`)
-  const data = (await res.json()) as EBListResponse
+  const data = await ebFetch<EBListResponse>(`/v1/properties?page=${page}&limit=${limit}`)
   const list = data.content ?? data.properties ?? []
   const items = list.map((item) => normalizeProperty(item)).filter(Boolean) as EBProperty[]
   const total = data.pagination?.total ?? 0
@@ -133,16 +137,7 @@ export async function listEBPropertiesPaged({ page = 1, limit = 50 } = {}): Prom
 }
 
 export async function getEBProperty(publicId: string): Promise<EBPropertyDetail | null> {
-  const base = '/eb'
-  const url = `${base}/v1/properties/${encodeURIComponent(publicId)}`
-  const res = await fetch(url, {
-    headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-    },
-  })
-  if (!res.ok) return null
-  const raw = await res.json()
+  const raw = await ebFetch<any>(`/v1/properties/${encodeURIComponent(publicId)}`)
   const baseNorm = normalizeProperty(raw)
   if (!baseNorm) return null
   const images: string[] = Array.isArray(raw.property_images)
