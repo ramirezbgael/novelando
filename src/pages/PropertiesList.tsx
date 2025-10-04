@@ -3,6 +3,7 @@ import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import { listEBPropertiesPaged, type EBProperty } from '../services/easybroker'
 import Navbar from '../components/Navbar'
 import { Footer } from '../components/Footer'
+import { resetPropertyFilters } from '../utils/propertyFilters'
 
 export default function PropertiesList() {
   const [params, setParams] = useSearchParams()
@@ -35,6 +36,23 @@ export default function PropertiesList() {
     return merged
   }
 
+  useEffect(() => {
+    const savedFilters = localStorage.getItem('propertyFilters');
+    if (savedFilters) {
+      const filters = JSON.parse(savedFilters);
+      if (filters.query !== undefined) setQuery(filters.query);
+      if (filters.beds !== undefined) setBeds(filters.beds);
+      if (filters.baths !== undefined) setBaths(filters.baths);
+      if (filters.minPrice !== undefined) setMinPrice(filters.minPrice);
+      if (filters.maxPrice !== undefined) setMaxPrice(filters.maxPrice);
+      if (filters.selectedLocs !== undefined) setSelectedLocs(filters.selectedLocs);
+      if (filters.propertyType !== undefined) setPropertyType(filters.propertyType);
+    }
+    const savedScroll = localStorage.getItem('propertyScroll');
+    if (savedScroll) {
+      window.scrollTo(0, parseInt(savedScroll, 10));
+    }
+  }, []);
 
   // Evita saltos por hash (#habitacional) y restauración automática del scroll
   useEffect(() => {
@@ -44,7 +62,7 @@ export default function PropertiesList() {
     if (location.hash) {
       navigate(`${location.pathname}${location.search}`, { replace: true })
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {
@@ -145,6 +163,21 @@ export default function PropertiesList() {
     setParams(next, { replace: true })
   }
 
+  // Ejemplo al navegar a la propiedad
+  const handlePropertyClick = (id: string) => {
+    localStorage.setItem('propertyFilters', JSON.stringify({
+      query,
+      beds,
+      baths,
+      minPrice,
+      maxPrice,
+      selectedLocs,
+      propertyType,
+    }));
+    localStorage.setItem('propertyScroll', window.scrollY.toString());
+    navigate(`/property/${id}`);
+  };
+
   return (
     <section className="bg-black pt-24 md:pt-28 min-h-screen">
       <Navbar />
@@ -216,7 +249,22 @@ export default function PropertiesList() {
           </div>
           <div className="md:col-span-6 flex gap-2">
             <button type="submit" className="rounded-full px-5 py-2 nv-gradient-gold text-black text-sm font-medium shadow-[0_6px_20px_rgba(98,180,155,0.35)]">Aplicar</button>
-            <button type="button" onClick={() => { setQuery(''); setBeds(0); setBaths(0); setMinPrice(0); setMaxPrice(0); setParams({}); setSelectedLocs([]); setPropertyType('') }} className="rounded-full px-5 py-2 border border-white/15 text-sm text-white/80 hover:bg-white/10">Limpiar</button>
+            <button
+              type="button"
+              onClick={() => resetPropertyFilters(
+                setQuery,
+                setBeds,
+                setBaths,
+                setMinPrice,
+                setMaxPrice,
+                setParams,
+                setSelectedLocs,
+                setPropertyType
+              )}
+              className="rounded-full px-5 py-2 border border-white/15 text-sm text-white/80 hover:bg-white/10"
+            >
+              Limpiar
+            </button>
           </div>
         </form>
 
@@ -227,7 +275,12 @@ export default function PropertiesList() {
           {!initialLoading && !error && (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {filtered.map((p) => (
-                <a key={p.id} href={`/property/${encodeURIComponent(p.id)}`} className="group block relative overflow-hidden rounded-2xl bg-carbon ring-1 ring-white/5 hover:ring-white/10 transition">
+                <a key={p.id} onClick={e => {
+                  e.preventDefault();
+                  handlePropertyClick(p.id);
+                }}
+                  href={`/property/${encodeURIComponent(p.id)}`}
+                  className="group block relative overflow-hidden rounded-2xl bg-carbon ring-1 ring-white/5 hover:ring-white/10 transition">
                   {p.photoUrl ? (
                     <img src={p.photoUrl} alt={p.title} className="h-52 w-full object-cover transition-transform duration-500 group-hover:scale-105" />
                   ) : (

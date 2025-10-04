@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { getEBProperty, listEBPropertiesPaged, type EBPropertyDetail, type EBProperty } from '../services/easybroker'
 import { Footer } from '../components/Footer.tsx'
 import Navbar from '../components/Navbar.tsx'
-import CustomCalendar from '../components/CustomCalendar'
+import CustomCalendar from '../components/CustomCalendar.tsx'
 
 function Amenity({ icon, label }: { icon: React.ReactNode; label: string }) {
   return (
@@ -292,117 +292,101 @@ export default function Property() {
             <Amenity icon={<i className="fa-solid fa-building" />} label={`${a.floors || '—'} pisos`} />
           </div>
 
-
-
-
-
-        </div>
-        <div className='herocompra flex flex-col lg:flex-row gap-4 mt-8'>
-          <div className="paneldemapa w-full lg:w-1/2">
-            {/* Mapa */}
-            <div className="rounded-2xl h-[40vh] lg:h-[60vh] overflow-hidden nv-map-dark">
-              {lat && lng ? (
-
-                  <iframe
-                    title="Mapa"
-                  className="w-full h-full"
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                    src={`https://www.google.com/maps?q=${lat},${lng}&hl=es&z=15&output=embed`}
-                  />
-                ) : (
-                  <div>
-                    Cargando mapa
-                  </div>
-                )
-              }
-            </div>
-          </div>
-
-          <div className='w-full lg:w-1/2 paneldecompra'>
-            {/* Panel de compra (precio + CTAs), inspirado en PDP modernos */}
-            <div className="rounded-2xl border border-white/10 bg-white/5 p-5 flex-none">
-              <div className="text-2xl md:text-3xl font-semibold  price">
-                {new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN', maximumFractionDigits: 2 }).format(eb?.price || 0)}<span style={{ fontSize: 'small' }}> MXN</span><span className="text-white/100">{eb?.operationType == 'sale' ? '' : "/mes"}</span>
-              </div>
-              <div className="mt-1 text-xs text-white/70">Disponibilidad inmediata · Asesoría sin costo</div>
-              <div className="mt-4 flex flex-col gap-2">
-                {eb?.price ? (
+           {/* Map and nearby POIs */}
+           <div className="position-relative mt-10 grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+             <div className="rounded-2xl border border-white/10 overflow-hidden nv-map-dark">
+               <iframe
+                 title="Mapa"
+                 className="w-full h-[60svh]"
+                 loading="lazy"
+                 referrerPolicy="no-referrer-when-downgrade"
+                 src={`https://www.google.com/maps?q=${lat},${lng}&hl=es&z=15&output=embed`}
+               />
+             </div>
+            <div className="flex flex-col gap-3">
+              {/* Panel de compra (precio + CTAs), inspirado en PDP modernos */}
+              <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
+                <div className="text-2xl md:text-3xl font-semibold  price">
+                  {new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN', maximumFractionDigits: 2 }).format(eb?.price || 0)}<span style={{ fontSize: 'small' }}> MXN</span><span className="text-white/100">{eb?.operationType == 'sale' ? '' : "/mes"}</span>
+                </div>
+                <div className="mt-1 text-xs text-white/70">Disponibilidad inmediata · Asesoría sin costo</div>
+                <div className="mt-4 flex flex-col gap-2">
                   <button
                     type="button"
                     onClick={() => setShowPurchase(true)}
-                    className="hover:cursor-pointer inline-flex w-full items-center justify-center gap-3 h-12 md:h-13 rounded-3xl px-6 nv-gradient-gold text-white hover:cursor-pointer font-semibold tracking-wide shadow-[0_12px_34px_rgba(1,84,38,0.45)] hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30 transition"
+                    className="inline-flex w-full items-center justify-center gap-3 h-12 md:h-13 rounded-3xl px-6 nv-gradient-gold text-white hover:cursor-pointer font-semibold tracking-wide shadow-[0_12px_34px_rgba(1,84,38,0.45)] hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30 transition"
                   >
                     <i className="fa-solid fa-bag-shopping text-white/90" />
-                    Apartar propiedad {new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN', maximumFractionDigits: 2 }).format((eb.price || 0) / 10)}
+                    Apartar propiedad {new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN', maximumFractionDigits: 2 }).format((eb?.price || 0) / 10)}
                   </button>
-                ) : (
-                  <div className="h-12 md:h-13 rounded-3xl bg-gradient-to-r from-green-400/10 to-white/5 animate-pulse w-full" />
-                )}
-                <button
-                  type="button"
-                  onClick={() => setShowSchedule(!showSchedule)}
-                  className="hover:cursor-pointer inline-flex w-full hover:cursor-pointer items-center justify-center gap-2 h-11 md:h-12 rounded-3xl border border-white/15 bg-white/5 px-6 text-sm md:text-base text-white/90 hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/20 transition"
-                >
-                  <i className="fa-solid fa-calendar-check" />
-                  <span className="ml-1">{showSchedule ? 'Ocultar calendario' : 'Agendar visita'}</span>
-                </button>
-              </div>
-              <div className="mt-3 flex items-center gap-4 text-xs text-white/60">
-                <div className="inline-flex items-center gap-1"><i className="fa-solid fa-shield" /> Trato seguro</div>
-                <div className="inline-flex items-center gap-1"><i className="fa-solid fa-bolt" /> Respuesta rápida</div>
-              </div>
-
-              {/* Calendly expandible */}
-              {showSchedule && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: 'auto' }}
-                  exit={{ opacity: 0, height: 0 }}
-                  transition={{ duration: 0.3, ease: 'easeInOut' }}
-                  className="mt-4 rounded-2xl border border-white/10 bg-white/5 overflow-hidden"
-                >
-                  <div className="p-4">
-                    <div className="text-white/80 mb-3 flex items-center gap-2">
-                      <span className="nv-icon"><i className="fa-solid fa-calendar-check" /></span>
-                      Selecciona fecha y hora para tu visita
+                  <button
+                    type="button"
+                    onClick={() => setShowSchedule(!showSchedule)}
+                    className="inline-flex w-full hover:cursor-pointer items-center justify-center gap-2 h-11 md:h-12 rounded-3xl border border-white/15 bg-white/5 px-6 text-sm md:text-base text-white/90 hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/20 transition"
+                  >
+                    <i className="fa-solid fa-calendar-check" />
+                    <span className="ml-1">{showSchedule ? 'Ocultar calendario' : 'Agendar visita'}</span>
+                  </button>
+                </div>
+                <div className="mt-3 flex items-center gap-4 text-xs text-white/60">
+                  <div className="inline-flex items-center gap-1"><i className="fa-solid fa-shield" /> Trato seguro</div>
+                  <div className="inline-flex items-center gap-1"><i className="fa-solid fa-bolt" /> Respuesta rápida</div>
+                </div>
+                
+                {/* Calendario expandible */}
+                {showSchedule && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ duration: 0.3, ease: 'easeInOut' }}
+                    className="mt-4 rounded-2xl border border-white/10 bg-white/5 overflow-hidden"
+                  >
+                    <div className="p-4">
+                      <div className="text-white/80 mb-3 flex items-center gap-2">
+                        <span className="nv-icon"><i className="fa-solid fa-calendar-check" /></span>
+                        Selecciona fecha y hora para tu visita
+                      </div>
+                      <CustomCalendar onBookingComplete={(data) => {
+                        console.log('Cita programada:', data);
+                        // Aquí puedes agregar lógica para enviar los datos a tu backend
+                        alert(`¡Cita confirmada! ${data.name}, te esperamos el ${new Date(data.date).toLocaleDateString('es-ES')} a las ${data.time}. Te contactaremos al ${data.phone}`);
+                      }} />
                     </div>
-                    <CustomCalendar onBookingComplete={(data: { date: string, time: string, name: string, phone: string }) => {
-                      console.log('Cita programada:', data);
-                      // Aquí puedes agregar lógica para enviar los datos a tu backend
-                      alert(`¡Cita confirmada! ${data.name}, te esperamos el ${new Date(data.date).toLocaleDateString('es-ES')} a las ${data.time}. Te contactaremos al ${data.phone}`);
-                    }} />
-                  </div>
-                </motion.div>
-              )}
-            </div>
+                  </motion.div>
+                )}
+              </div>
 
-            {/* Métodos de pago */}
-            <div className="rounded-2xl border border-white/10 bg-white/5 p-4 mt-4">
-              <div className="text-white/80 mb-3 flex items-center gap-2">
-                <span className="nv-icon"><i className="fa-solid fa-credit-card" /></span>
-                Métodos de pago
+              {/* Métodos de pago e interesados */}
+              <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+                <div className="text-white/80 mb-3 flex items-center gap-2">
+                  <span className="nv-icon"><i className="fa-solid fa-credit-card" /></span>
+                  Métodos de pago
+                </div>
+                <div className="flex flex-wrap gap-2 mb-4">
+                  {[
+                    { icon: 'fa-credit-card', label: 'Tarjeta' },
+                    { icon: 'fa-university', label: 'Transferencia' },
+                    { icon: 'fa-money-bill-wave', label: 'Efectivo' },
+                    { icon: 'fa-handshake', label: 'Financiamiento' },
+                  ].map((t) => (
+                    <button key={t.label} className="rounded-full px-3 py-1 text-sm border border-white/15 hover:bg-white/10 inline-flex items-center gap-2">
+                      <span className="nv-icon"><i className={`fa-solid ${t.icon}`} /></span>
+                      {t.label}
+                    </button>
+                  ))}
+                </div>
+
+                {/* Interesados */}
+
               </div>
-              <div className="grid grid-cols-2 gap-2">
-                {[
-                  { icon: 'fa-credit-card', label: 'Tarjeta' },
-                  { icon: 'fa-university', label: 'Transferencia' },
-                  { icon: 'fa-money-bill-wave', label: 'Efectivo' },
-                  { icon: 'fa-handshake', label: 'Financiamiento' },
-                ].map((t) => (
-                  <button key={t.label} className="rounded-full px-3 py-2 text-sm border border-white/15 hover:bg-white/10 inline-flex items-center justify-center gap-2">
-                    <span className="nv-icon"><i className={`fa-solid ${t.icon}`} /></span>
-                    {t.label}
-                  </button>
-                ))}
-              </div>
+
             </div>
           </div>
-        </div>
-        <div>
+
           {/* Descripciones cortas */}
-          <div className=" mt-6 md:mt-24">
-            <div className=" mx-auto px-6">
+          <div className="mt-16 md:mt-24">
+            <div className="container mx-auto px-6">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {[0, 1, 2].map((col: number) => (
                   <div key={col} className="rounded-2xl border border-white/10 bg-white/5 overflow-hidden">
@@ -421,71 +405,74 @@ export default function Property() {
             </div>
           </div>
 
-          {/* Propiedades similares (API) */}
-          <div className="mt-16 md:mt-20">
-            <div className="container mx-auto px-6">
-              <div className="flex items-end justify-between">
-                <h2 className="text-2xl md:text-4xl font-serif nv-gold-text">Propiedades recomendadas</h2>
+            {/* Propiedades similares (API) */}
+            <div className="mt-16 md:mt-20">
+              <div className="container mx-auto px-6">
+                <div className="flex items-end justify-between">
+                  <h2 className="text-2xl md:text-4xl font-serif nv-gold-text">Propiedades similares</h2>
+                </div>
+                <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {similar.map((p) => (
+                    <Link key={p.id} to={`/property/${encodeURIComponent(p.id)}`} className="group block relative overflow-hidden rounded-2xl bg-carbon ring-1 ring-white/5 hover:ring-white/10 transition">
+                      {p.photoUrl ? (
+                        <img src={p.photoUrl} alt={p.title} className="h-52 w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                      ) : (
+                        <div className="h-52 w-full flex items-center justify-center text-white/50">Sin imagen</div>
+                      )}
+                      <div className="p-4">
+                        <div className="font-medium">{p.title}</div>
+                        <div className="text-sm text-white/70">{p.location}</div>
+                        <div className="mt-2 nv-gold-text font-semibold">{new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN', maximumFractionDigits: 0 }).format(p.price || 0)}</div>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
               </div>
-              <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {similar.map((p) => (
-                  <Link key={p.id} to={`/property/${encodeURIComponent(p.id)}`} className="group block relative overflow-hidden rounded-2xl bg-carbon ring-1 ring-white/5 hover:ring-white/10 transition">
-                    {p.photoUrl ? (
-                      <img src={p.photoUrl} alt={p.title} className="h-52 w-full object-cover transition-transform duration-500 group-hover:scale-105" />
-                    ) : (
-                      <div className="h-52 w-full flex items-center justify-center text-white/50">Sin imagen</div>
-                    )}
-                    <div className="p-4">
-                      <div className="font-medium">{p.title}</div>
-                      <div className="text-sm text-white/70">{p.location}</div>
-                      <div className="mt-2 nv-gold-text font-semibold">{new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN', maximumFractionDigits: 0 }).format(p.price || 0)}</div>
+            </div>
+
+             {/* Propiedades cercanas (API, carrusel horizontal) */}
+             <div className="mt-16 md:mt-20 mb-12 md:mb-20">
+               <div className="container mx-auto px-6">
+                 <h2 className="text-2xl md:text-4xl font-serif nv-gold-text">Propiedades cercanas</h2>
+                 <div className="mt-8 relative">
+                   <div ref={nearbyRef} className="overflow-x-auto nv-scroll-hide max-w-full">
+                     <div className="flex gap-4 w-max pr-4">
+                      {nearby.map((p) => (
+                        <Link key={p.id} to={`/property/${encodeURIComponent(p.id)}`} className="group block w-[280px] sm:w-[320px] relative overflow-hidden rounded-2xl bg-carbon ring-1 ring-white/5 hover:ring-white/10 transition shrink-0">
+                          {p.photoUrl ? (
+                            <img src={p.photoUrl} alt={p.title} className="h-44 w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                          ) : (
+                            <div className="h-44 w-full flex items-center justify-center text-white/50">Sin imagen</div>
+                          )}
+                          <div className="p-4">
+                            <div className="font-medium line-clamp-2">{p.title}</div>
+                            <div className="text-sm text-white/70 line-clamp-1">{p.location}</div>
+                            <div className="mt-2 nv-gold-text font-semibold">{new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN', maximumFractionDigits: 2 }).format(p.price || 0)}</div>
+                          </div>
+                        </Link>
+                      ))}
                     </div>
-                  </Link>
-                ))}
+                  </div>
+                  <button
+                    aria-label="Anterior"
+                    onClick={() => scrollNearby(-1)}
+                    className="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 items-center justify-center h-10 w-10 rounded-full bg-white/15 hover:bg-white/20 border border-white/30 text-white text-2xl shadow-lg backdrop-blur-sm"
+                  >
+                    ‹
+                  </button>
+                  <button
+                    aria-label="Siguiente"
+                    onClick={() => scrollNearby(1)}
+                    className="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 items-center justify-center h-10 w-10 rounded-full bg-white/15 hover:bg-white/20 border border-white/30 text-white text-2xl shadow-lg backdrop-blur-sm"
+                  >
+                    ›
+                  </button>
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Propiedades cercanas (API, carrusel horizontal) */}
-          <div className="mt-16 md:mt-20 mb-12 md:mb-20">
-            <div className="container mx-auto px-6">
-              <h2 className="text-2xl md:text-4xl font-serif nv-gold-text">Propiedades cercanas</h2>
-              <div className="mt-8 relative">
-                <div ref={nearbyRef} className="overflow-x-auto nv-scroll-hide">
-                  <div className="flex gap-4 min-w-full pr-4">
-                    {nearby.map((p) => (
-                      <Link key={p.id} to={`/property/${encodeURIComponent(p.id)}`} className="group block w-[280px] sm:w-[320px] relative overflow-hidden rounded-2xl bg-carbon ring-1 ring-white/5 hover:ring-white/10 transition shrink-0">
-                        {p.photoUrl ? (
-                          <img src={p.photoUrl} alt={p.title} className="h-44 w-full object-cover transition-transform duration-500 group-hover:scale-105" />
-                        ) : (
-                          <div className="h-44 w-full flex items-center justify-center text-white/50">Sin imagen</div>
-                        )}
-                        <div className="p-4">
-                          <div className="font-medium line-clamp-2">{p.title}</div>
-                          <div className="text-sm text-white/70 line-clamp-1">{p.location}</div>
-                          <div className="mt-2 nv-gold-text font-semibold">{new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN', maximumFractionDigits: 2 }).format(p.price || 0)}</div>
-                        </div>
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-                <button
-                  aria-label="Anterior"
-                  onClick={() => scrollNearby(-1)}
-                  className="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 items-center justify-center h-10 w-10 rounded-full bg-white/15 hover:bg-white/20 border border-white/30 text-white text-2xl shadow-lg backdrop-blur-sm"
-                >
-                  ‹
-                </button>
-                <button
-                  aria-label="Siguiente"
-                  onClick={() => scrollNearby(1)}
-                  className="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 items-center justify-center h-10 w-10 rounded-full bg-white/15 hover:bg-white/20 border border-white/30 text-white text-2xl shadow-lg backdrop-blur-sm"
-                >
-                  ›
-                </button>
-              </div>
-            </div>
-          </div>
+        </div>
         </div>
       </section>
       {/* Lightbox Modal */}
@@ -509,62 +496,68 @@ export default function Property() {
               exit={{ scale: 0.98, opacity: 0 }}
               transition={{ type: 'spring', stiffness: 220, damping: 24 }}
               className="relative w-[100vw] max-w-[100vw] md:max-w-[92vw] px-3 md:px-0"
-              onClick={e => e.stopPropagation()}
+              onClick={(e) => e.stopPropagation()}
             >
-              <div className="relative flex items-center justify-center">
-                {/* Imagen ampliada */}
+              <motion.div
+                className="relative overflow-visible flex items-center justify-center"
+                style={{ touchAction: 'none' }}
+              >
                 <motion.img
                   src={images[lightboxIndex]}
                   alt={`${eb?.title || 'Propiedad'} ampliada`}
                   className={`max-h-[90svh] w-full md:w-auto object-contain rounded-xl border border-white/10 shadow-2xl select-none ${isZoomed ? 'cursor-move' : 'cursor-zoom-in'}`}
-                  animate={{ scale: isZoomed ? 1.8 : 1 }}
+                  animate={{ scale: isZoomed ? 1.5 : 1 }}
                   transition={{ duration: 0.3, ease: 'easeInOut' }}
                   drag={isZoomed}
                   dragConstraints={{ left: -400, right: 400, top: -400, bottom: 400 }}
                   dragElastic={0.05}
                   dragMomentum={false}
                   whileTap={isZoomed ? { cursor: 'grabbing' } : undefined}
-                  onDragStart={e => {
+                  onDragStart={(e) => {
                     e.stopPropagation()
                     setIsDragging(true)
                   }}
-                  onDragEnd={e => {
+                  onDragEnd={(e) => {
                     e.stopPropagation()
+                    // Pequeño delay para que el click no se ejecute después del drag
                     setTimeout(() => setIsDragging(false), 100)
                   }}
-                  onClick={e => {
+                  onClick={(e) => {
                     e.stopPropagation()
-                    if (!isDragging) setIsZoomed(!isZoomed)
+                    // Solo hacer zoom si no estamos arrastrando
+                    if (!isDragging) {
+                      setIsZoomed(!isZoomed)
+                    }
                   }}
                 />
-                {/* Controls (ahora absolute, no fixed) */}
-                <button
-                  aria-label="Anterior"
-                  onClick={e => { e.stopPropagation(); goPrev(); }}
-                  className="absolute left-0 top-1/2 -translate-y-1/2 flex items-center justify-center h-24 w-9 md:w-12 rounded-full bg-white/20 hover:bg-white/25 border border-white/30 text-white text-3xl md:text-4xl shadow-lg backdrop-blur-sm"
-                >
-                  ‹
-                </button>
-                <button
-                  aria-label="Siguiente"
-                  onClick={e => { e.stopPropagation(); goNext(); }}
-                  className="absolute right-0 top-1/2 -translate-y-1/2 flex items-center justify-center h-24 w-9 md:w-12 rounded-full bg-white/20 hover:bg-white/25 border border-white/30 text-white text-3xl md:text-4xl shadow-lg backdrop-blur-sm"
-                >
-                  ›
-                </button>
-                <button
-                  aria-label="Cerrar"
-                  onClick={e => {
-                    e.stopPropagation()
-                    setLightboxIndex(null)
-                    setIsZoomed(false)
-                    setIsDragging(false)
-                  }}
-                  className="absolute top-4 right-4 md:top-6 md:right-6 flex items-center justify-center h-10 w-10 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 text-white text-xl shadow-lg backdrop-blur-sm transition"
-                >
-                  ✕
-                </button>
-              </div>
+              </motion.div>
+              {/* Controls (fixed, discretos) */}
+              <button
+                aria-label="Anterior"
+                onClick={goPrev}
+                className="fixed left-1 md:left-6 top-1/2 -translate-y-1/2 flex items-center justify-center h-24 w-9 md:h-24 md:w-12 rounded-full bg-white/20 hover:bg-white/25 border border-white/30 text-white text-3xl md:text-4xl shadow-lg backdrop-blur-sm"
+              >
+                ‹
+              </button>
+              <button
+                aria-label="Siguiente"
+                onClick={goNext}
+                className="fixed right-1 md:right-6 top-1/2 -translate-y-1/2 flex items-center justify-center h-24 w-9 md:h-24 md:w-12 rounded-full bg-white/20 hover:bg-white/25 border border-white/30 text-white text-3xl md:text-4xl shadow-lg backdrop-blur-sm"
+              >
+                ›
+              </button>
+              <button
+                aria-label="Cerrar"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  setLightboxIndex(null)
+                  setIsZoomed(false)
+                  setIsDragging(false)
+                }}
+                className="fixed top-4 right-4 md:top-6 md:right-6 flex items-center justify-center h-10 w-10 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 text-white text-xl shadow-lg backdrop-blur-sm transition"
+              >
+                ✕
+              </button>
               {/* Thumbnails row */}
               <div className="mt-3 md:mt-4 px-1">
                 <div className="flex items-center gap-2 overflow-x-auto nv-scroll-hide max-w-[100vw] md:max-w-[92vw]">
@@ -572,8 +565,8 @@ export default function Property() {
                     <button
                       key={src + i}
                       aria-label={`Ver foto ${i + 1}`}
-                      onClick={e => { e.stopPropagation(); setLightboxIndex(i); }}
-                      className={`shrink-0 bg-white rounded-md overflow-hidden border ${i === lightboxIndex ? 'border-white/60' : 'border-white/10'} hover:border-white/40`}
+                      onClick={() => setLightboxIndex(i)}
+                      className={`shrink-0 rounded-md overflow-hidden border ${i === lightboxIndex ? 'border-white/60' : 'border-white/10'} hover:border-white/40`}
                       style={{ width: 56, height: 56 }}
                     >
                       <img src={src} alt="miniatura" className="h-full w-full object-cover" />

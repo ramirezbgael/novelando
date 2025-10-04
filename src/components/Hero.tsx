@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
-import { FaDollarSign, FaIndustry, FaHome } from 'react-icons/fa'
+import { FaDollarSign, FaIndustry, FaHome, FaArrowLeft } from 'react-icons/fa'
+import { resetPropertyFilters } from '../utils/propertyFilters'
 
 export function Hero() {
   const images = ['/photos/tulum_outside.webp', '/photos/tulum_inside.webp', '/photos/sanmateo_outside.jpg', '/photos/sanmateo_inside.png']
@@ -59,23 +60,36 @@ export function Hero() {
         <div className="mt-8 mb-10 flex items-center gap-2 md:gap-3">
           <Link
             to="/properties#industrial"
-            className="inline-flex items-center gap-2 h-6 border-none px-5 rounded-3xl text-sm md:text-base font-medium text-white bg-gradient-to-r from-emerald-700 via-green-700 to-emerald-600 shadow-[0_10px_30px_rgba(1,84,38,0.35)] ring-0 ring-white/15 hover:brightness-110 transition"
+            onClick={()=>{
+              resetPropertyFilters()
+            }}
+            className="inline-flex items-center rounded-full border border-green-400/30 bg-gradient-to-r from-green-400/10 to-white/5 px-4 py-2 text-xs md:text-sm font-semibold text-green-300 hover:bg-green-400/20 hover:text-green-100 transition shadow"
           >
-            <FaIndustry size={14} className="opacity-90" />
+            <FaArrowLeft className="w-4 h-4 mr-2" />
+            <FaIndustry size={14} className="opacity-90 mr-2" />
             <span>Industrial</span>
           </Link>
           <Link
+          
             to="/properties#habitacional"
-            className="inline-flex items-center gap-2 h-6 md:h-11 px-6 md:px-8 rounded-4xl text-sm md:text-base font-semibold text-white bg-gradient-to-r from-green-600 via-emerald-500 to-green-500 shadow-[0_12px_34px_rgba(1,84,38,0.45)] ring-0 ring-white/20 hover:brightness-110 transition"
+            onClick={()=>{
+              resetPropertyFilters()
+            }}
+            className="inline-flex items-center rounded-full border border-green-400/30 bg-gradient-to-r from-green-400/10 to-white/5 px-6 py-3 text-xs md:text-sm font-semibold text-green-300 hover:bg-green-400/20 hover:text-green-100 transition shadow"
           >
-            <FaHome size={14} className="opacity-90" />
+            <FaArrowLeft className="w-4 h-4 mr-2" />
+            <FaHome size={22} className="opacity-90 mr-2 mb-1" />
             <span>Habitacional</span>
           </Link>
           <Link
             to="/properties#comercial"
-            className="inline-flex items-center gap-2 h-7 px-5 rounded-4xl text-sm md:text-base font-medium text-white bg-gradient-to-r from-emerald-700 via-green-700 to-emerald-600 shadow-[0_10px_30px_rgba(1,84,38,0.35)] ring-0 hover:brightness-110 transition"
+            onClick={()=>{
+              resetPropertyFilters()
+            }}
+            className="inline-flex items-center rounded-full border border-green-400/30 bg-gradient-to-r from-green-400/10 to-white/5 px-4 py-2 text-xs md:text-sm font-semibold text-green-300 hover:bg-green-400/20 hover:text-green-100 transition shadow"
           >
-            <FaDollarSign size={14} className="opacity-90" />
+            <FaArrowLeft className="w-4 h-4 mr-2" />
+            <FaDollarSign size={14} className="opacity-90 mr-2" />
             <span>Comercial</span>
           </Link>
         </div>

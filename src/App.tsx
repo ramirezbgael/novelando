@@ -6,7 +6,7 @@ import { PropertyFinder } from './components/PropertyFinder.tsx'
 import { Testimonials } from './components/Testimonials.tsx'
 import { Contact } from './components/Contact.tsx'
 import { Footer } from './components/Footer.tsx'
-
+import { Mostviewed } from './components/mostviewed.tsx'
 
 function App() {
   return (
@@ -16,7 +16,9 @@ function App() {
       <ScrollShowcase />
       <PropertyFinder />
       <FeaturedProperties />
+      <Mostviewed/>
       <About />
+
       <Testimonials />
       <Contact />
       <Footer />
