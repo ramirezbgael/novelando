@@ -65,19 +65,18 @@ export function Hero() {
             }}
             className="inline-flex items-center rounded-full border border-green-400/30 bg-gradient-to-r from-green-400/10 to-white/5 px-4 py-2 text-xs md:text-sm font-semibold text-green-300 hover:bg-green-400/20 hover:text-green-100 transition shadow"
           >
-            <FaArrowLeft className="w-4 h-4 mr-2" />
-            <FaIndustry size={14} className="opacity-90 mr-2" />
-            <span>Industrial</span>
+            <FaArrowLeft className="w-4 h-4 mr-2 hidden md:inline" />
+            <FaIndustry size={14} className="opacity-90 md:mr-2" />
+            <span className="hidden md:inline">Industrial</span>
           </Link>
           <Link
-          
             to="/properties#habitacional"
             onClick={()=>{
               resetPropertyFilters()
             }}
             className="inline-flex items-center rounded-full border border-green-400/30 bg-gradient-to-r from-green-400/10 to-white/5 px-6 py-3 text-xs md:text-sm font-semibold text-green-300 hover:bg-green-400/20 hover:text-green-100 transition shadow"
           >
-            <FaArrowLeft className="w-4 h-4 mr-2" />
+            <FaArrowLeft className="w-4 h-4 mr-2 hidden md:inline" />
             <FaHome size={22} className="opacity-90 mr-2 mb-1" />
             <span>Habitacional</span>
           </Link>
@@ -88,9 +87,9 @@ export function Hero() {
             }}
             className="inline-flex items-center rounded-full border border-green-400/30 bg-gradient-to-r from-green-400/10 to-white/5 px-4 py-2 text-xs md:text-sm font-semibold text-green-300 hover:bg-green-400/20 hover:text-green-100 transition shadow"
           >
-            <FaArrowLeft className="w-4 h-4 mr-2" />
-            <FaDollarSign size={14} className="opacity-90 mr-2" />
-            <span>Comercial</span>
+            <FaArrowLeft className="w-4 h-4 mr-2 hidden md:inline" />
+            <FaDollarSign size={14} className="opacity-90 md:mr-2" />
+            <span className="hidden md:inline">Comercial</span>
           </Link>
         </div>
       </div>

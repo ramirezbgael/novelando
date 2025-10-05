@@ -1,3 +1,5 @@
+import { AboutPropertyCard } from './AboutPropertyCard'
+
 export function About() {
   return (
     <section className="bg-white text-black py-24 md:py-32">
@@ -14,12 +16,7 @@ export function About() {
           </ul>
         </div>
         <div className="relative">
-          <img
-            src="/photos/about.jpg"
-            alt="Lifestyle"
-            className="w-full h-[420px] object-cover rounded-3xl shadow-2xl"
-          />
-          <div className="absolute -bottom-6 -left-6 h-32 w-32 rounded-full" style={{ background: 'radial-gradient(circle, rgba(200,169,106,0.45), transparent 60%)' }} />
+          <AboutPropertyCard />
         </div>
       </div>
     </section>

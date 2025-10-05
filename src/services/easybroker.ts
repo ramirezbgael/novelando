@@ -68,11 +68,18 @@ function normalizeProperty(raw: any): EBProperty | null {
 // so the API key is NEVER embedded in the client bundle.
 export const hasEasyBrokerKey = true
 
-// In dev, hit Vite proxy "/eb"; in production, call Netlify Function directly
-const EB_BASE = import.meta.env.DEV ? '/eb' : '/.netlify/functions/eb'
+// In dev and prod, use PHP endpoint
+const EB_BASE = '/api/eb.php'
 
 async function ebFetch<T = any>(path: string, init?: RequestInit): Promise<T> {
-  const url = `${EB_BASE}${path}`
+  // Map path to PHP endpoint
+  let url = EB_BASE;
+  if (path.startsWith('/v1/properties?')) {
+    url += path.replace('/v1/properties?', '?');
+  } else if (path.startsWith('/v1/properties/')) {
+    const id = path.split('/v1/properties/')[1];
+    url += `?id=${id}`;
+  }
   try {
     console.log('[EB] →', url)
     const res = await fetch(url, {

@@ -11,14 +11,12 @@ import { Mostviewed } from './components/Mostviewed.tsx'
 function App() {
   return (
     <div className="bg-black text-white">
-
       <Hero />
       <ScrollShowcase />
       <PropertyFinder />
       <FeaturedProperties />
       <Mostviewed/>
       <About />
-
       <Testimonials />
       <Contact />
       <Footer />

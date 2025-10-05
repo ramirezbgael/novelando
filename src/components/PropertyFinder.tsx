@@ -1,52 +1,88 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { AnimatePresence, motion } from 'framer-motion'
+import { AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { listEBProperties, type EBProperty } from '../services/easybroker'
+import { useRef } from 'react'
+import { Canvas, useFrame } from '@react-three/fiber'
+import { OrbitControls, Stage, Html } from '@react-three/drei'
+
+function HouseModel() {
+  const group = useRef<any>(null) // Fix: useRef<any> to avoid TS error
+  // Rotar suavemente sobre el eje Y
+  useFrame((_, delta) => {
+    if (group.current) {
+      group.current.rotation.y += delta * 0.25
+    }
+  })
+
+  return (
+    <group ref={group} scale={1.7} position={[0, 0.2, 0]}>
+      {/* Base */}
+      <mesh position={[0, -0.6, 0]}>
+        <boxGeometry args={[2.8, 0.18, 2]} />
+        <meshStandardMaterial color="#009e3c" metalness={0.55} roughness={0.25} />
+      </mesh>
+      {/* Walls */}
+      <mesh position={[0, 0.25, 0]}>
+        <boxGeometry args={[2.4, 1.1, 1.4]} />
+        <meshStandardMaterial color="#1de950" roughness={0.35} />
+      </mesh>
+      {/* Windows */}
+      <mesh position={[-0.65, 0.4, 0.73]}>
+        <boxGeometry args={[0.38, 0.38, 0.04]} />
+        <meshStandardMaterial color="#00ffb3" emissive="#00ffb3" emissiveIntensity={0.28} transparent opacity={0.95} />
+      </mesh>
+      <mesh position={[0.65, 0.4, 0.73]}>
+        <boxGeometry args={[0.38, 0.38, 0.04]} />
+        <meshStandardMaterial color="#00ffb3" emissive="#00ffb3" emissiveIntensity={0.28} transparent opacity={0.95} />
+      </mesh>
+      {/* Door */}
+      <mesh position={[0, -0.12, 0.73]}>
+        <boxGeometry args={[0.32, 0.55, 0.04]} />
+        <meshStandardMaterial color="#007a2f" roughness={0.25} />
+      </mesh>
+      {/* Roof */}
+      <mesh position={[0, 1.25, 0]} rotation={[0, Math.PI / 4, 0]}>
+        <coneGeometry args={[1.85, 0.9, 4]} />
+        <meshStandardMaterial color="#00c853" metalness={0.7} roughness={0.18} />
+      </mesh>
+      {/* Chimney */}
+      <mesh position={[-0.5, 1.25, -0.25]}>
+        <boxGeometry args={[0.13, 0.32, 0.13]} />
+        <meshStandardMaterial color="#00e676" />
+      </mesh>
+      {/* Sparkles */}
+      <mesh position={[1, 1.6, 0]}>
+        <sphereGeometry args={[0.045, 16, 16]} />
+        <meshStandardMaterial emissive="#00ff00" emissiveIntensity={2.2} color="#00ff00" />
+      </mesh>
+      <mesh position={[-0.9, 1.7, 0.4]}>
+        <sphereGeometry args={[0.03, 16, 16]} />
+        <meshStandardMaterial emissive="#00ff00" emissiveIntensity={1.7} color="#00ff00" />
+      </mesh>
+    </group>
+  )
+}
 
 function HouseBuild3D() {
   return (
-    <div className="relative" style={{ width: 260, height: 180 }}>
-      <div className="absolute inset-0" style={{ filter: 'drop-shadow(0 10px 30px rgba(200,169,106,0.25))' }} />
-      {/* Base */}
-      <motion.div
-        initial={{ y: 40, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.9, ease: 'easeOut', delay: 0.2 }}
-        className="absolute bottom-6 left-1/2 -translate-x-1/2 h-6 w-52 rounded-md nv-gradient-gold"
-      />
-      {/* Walls */}
-      <motion.div
-        initial={{ height: 0, opacity: 0 }}
-        animate={{ height: 90, opacity: 1 }}
-        transition={{ duration: 1.4, ease: 'easeOut', delay: 0.6 }}
-        className="absolute bottom-12 left-1/2 -translate-x-1/2 w-52 rounded-t-md bg-neutral-900 border-x border-t border-white/10"
-      />
-      {/* Left wall shading */}
-      <motion.div
-        initial={{ height: 0, opacity: 0 }}
-        animate={{ height: 90, opacity: 1 }}
-        transition={{ duration: 1.4, ease: 'easeOut', delay: 0.7 }}
-        className="absolute bottom-12 left-[calc(50%-104px)] w-20 bg-white/5"
-      />
-      {/* Windows */}
-      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2.4 }} className="absolute bottom-24 left-1/2 -translate-x-1/2 grid grid-cols-3 gap-2">
-        {Array.from({ length: 6 }).map((_, i) => (
-          <div key={i} className="h-6 w-8 rounded-sm bg-black/60 border border-white/10">
-            <div className="h-full w-full bg-rgba(0,167,167,0.25" />
+    <div style={{ width: 620, height: 320 }}>
+      <Canvas camera={{ position: [0, 1.5, 5], fov: 38 }}>
+        <ambientLight intensity={0.7} />
+        <directionalLight position={[5, 8, 5]} intensity={1.2} castShadow shadow-mapSize-width={1024} shadow-mapSize-height={1024} />
+        <Stage environment="city" intensity={0.5} shadows={false}>
+          <group scale={1} position={[0, 0, 0]}>
+            <HouseModel />
+          </group>
+        </Stage>
+        <OrbitControls enableZoom={false} enablePan={false} autoRotate autoRotateSpeed={0.7} minPolarAngle={Math.PI / 3.2} maxPolarAngle={Math.PI / 2.1} />
+        <Html position={[0, -1.2, 0]}>
+          <div style={{ textAlign: 'center', color: '#FFD700', fontWeight: 600, textShadow: '0 2px 8px #0008', fontSize: 18 }}>
+            {/* Opcional: texto debajo de la casa */}
           </div>
-        ))}
-      </motion.div>
-      {/* Roof */}
-      <motion.div
-        initial={{ scaleY: 0, opacity: 0 }}
-        animate={{ scaleY: 1, opacity: 1 }}
-        transition={{ duration: 1.0, ease: 'easeOut', delay: 2.2 }}
-        className="absolute left-1/2 -translate-x-1/2 bottom-[124px] w-64 h-0 border-l-[64px] border-r-[64px] border-b-[40px] border-l-transparent border-r-transparent"
-        style={{ borderBottomColor: '#FFD700' }}
-      />
-      {/* Sparkles */}
-      <motion.div initial={{ opacity: 0 }} animate={{ opacity: [0, 1, 0] }} transition={{ duration: 1.6, repeat: Infinity, repeatDelay: 0.6 }} className="absolute -top-1 left-16 h-1 w-1 rounded-full bg-[--color-gold]" />
-      <motion.div initial={{ opacity: 0 }} animate={{ opacity: [0, 1, 0] }} transition={{ duration: 1.6, repeat: Infinity, repeatDelay: 0.8 }} className="absolute top-2 right-14 h-1 w-1 rounded-full bg-[--color-gold]" />
+        </Html>
+      </Canvas>
     </div>
   )
 }
@@ -102,8 +138,14 @@ export function PropertyFinder() {
   }
 
   return (
-    <section className="bg-black pt-2 pb-12 md:pt-20 md:pb-16">
-      <div className="container mx-auto px-6">
+    <section className="relative bg-black pt-2 pb-12 md:pt-20 md:pb-16 overflow-hidden">
+      {/* 3D House background */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
+        <div className="opacity-25">
+          <HouseBuild3D />
+        </div>
+      </div>
+      <div className="relative z-10 container mx-auto px-6">
         <div className="mx-auto max-w-3xl text-center">
           <h2 className="text-3xl md:text-5xl font-serif nv-gold-text">Generador de casa ideal</h2>
           <p className="mt-3 text-white/70">Indica recámaras, baños y precio. Te mostraremos la mejor opción.</p>

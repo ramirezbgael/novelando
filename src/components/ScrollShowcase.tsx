@@ -1,7 +1,7 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { useEffect, useRef, useState, useCallback } from 'react'
 import { Link } from 'react-router-dom'
-import { type EBProperty, listEBProperties } from '../services/easybroker'
+import { type EBProperty, getEBProperty } from '../services/easybroker'
 
 export function ScrollShowcase() {
   const [properties, setProperties] = useState<EBProperty[]>([])
@@ -10,9 +10,19 @@ export function ScrollShowcase() {
 
   // Fetch properties from EasyBroker service
   useEffect(() => {
-    listEBProperties({ limit: 10 })
-      .then(setProperties)
-      .catch(() => setProperties([]))
+    const showcaseIds = [
+      'EB-TR4800',
+      'EB-SO8312',
+      'EB-QZ3402',
+      'EB-QP5485',
+      'EB-UG4749',
+      'EB-UD7897',
+      'EB-TC6356',
+      'EB-QP5428',
+    ];
+    Promise.all(showcaseIds.map(id => getEBProperty(id)))
+      .then(results => setProperties(results.filter(Boolean) as EBProperty[]))
+      .catch(() => setProperties([]));
   }, [])
 
   // Auto-advance carousel
