@@ -5,10 +5,6 @@ error_reporting(E_ALL);
 header("Content-Type: application/json");
 $apiKey = getenv('EASYBROKER_API_KEY');
 if (!$apiKey) {
-  // Hardcode for local testing
-  $apiKey = 'ajnsdresl4nzgppfi8tlbp4ia93uy3';
-}
-if (!$apiKey) {
   http_response_code(500);
   echo json_encode(['error' => 'Missing API key']);
   exit;
